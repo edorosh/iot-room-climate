@@ -1,0 +1,25 @@
+// Print debug logs to Serial {TRUE/FALSE}
+#define DEBUG TRUE
+
+// WiFi Network configuration
+#define STAHOSTNAME "esp8266-climate-office"
+#define STASSID ""
+#define STAPSK ""
+
+#define WIFI_RECONNECT_ON_FAILURE_MS 500
+
+// MQTT server configuration
+#define MQTTSERVER "192.168.0.54"
+#define MQTTPORT 1883
+#define MQTT_CLIENT_NAME "arduino_climate_office"
+#define CONNECT_MQTT_TIMEOUT_MS 5e3
+
+#define MQTT_TEMPERATURE_TOPIC "climate/room/office/temperature"
+#define MQTT_HUMIDITY_TOPIC "climate/room/office/humidity"
+#define MQTT_PRESSURE_TOPIC "climate/room/office/pressure"
+
+#define SERIAL_SPEED_BAUD 115200
+#define SERIAL_TIMEOUT_MS 200
+
+// Updates Sensor readings every X ms seconds
+#define READ_INTERVAL_MS 10e3
