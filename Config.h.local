@@ -1,5 +1,10 @@
 // Print debug logs to Serial {TRUE/FALSE}
 #define DEBUG TRUE
+// Enable MHZ-19B sensor
+#define CO2_SENSOR 1
+// Configure MHZ-19B serial connection
+#define MHZ_TX_PIN D5
+#define MHZ_RX_PIN D6
 
 // WiFi Network configuration
 #define STAHOSTNAME "esp8266-climate-office"
@@ -17,6 +22,7 @@
 #define MQTT_TEMPERATURE_TOPIC "climate/room/office/temperature"
 #define MQTT_HUMIDITY_TOPIC "climate/room/office/humidity"
 #define MQTT_PRESSURE_TOPIC "climate/room/office/pressure"
+#define MQTT_CO2_TOPIC "climate/room/bedroom/co2"
 
 #define SERIAL_SPEED_BAUD 115200
 #define SERIAL_TIMEOUT_MS 200

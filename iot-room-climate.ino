@@ -34,6 +34,11 @@
 #include "DebugMacro.h"
 #include "Version.h"
 
+#if (CO2_SENSOR == 1)
+#include <MHZ19.h>
+MHZ19 mhz19;
+#endif
+
 #define BME_ADDRESS 0x76
 
 WiFiClient espClient;
@@ -41,6 +46,7 @@ PubSubClient client(espClient);
 Adafruit_BME280 bme;
 
 float temperature, humidity, pressure, altitude;
+int co2 = 0;
 
 // todo: replace timing vars by a Timout library
 // Generally, you should use "unsigned long" for variables that hold time
@@ -64,6 +70,17 @@ void setup()
 #endif
 
   bme.begin(BME_ADDRESS); 
+
+#if (CO2_SENSOR == 1)
+  DPRINTLN(F("MHZ-19B... "));
+  mhz19.begin(MHZ_RX_PIN, MHZ_TX_PIN);
+  mhz19.setAutoCalibration(false);
+  while (mhz19.getStatus() < 0) {
+    DPRINT(F("MH-Z19 now warming up...  status:"));
+    DPRINTLN(mhz19.getStatus());
+    delay(1000);
+  }
+#endif
 
   connectToWiFi();
   connectToMQTT();
@@ -221,6 +238,14 @@ bool readSensorsData()
   humidity = bme.readHumidity();
   pressure = bme.readPressure() / 100.0F;
 
+#if (CO2_SENSOR == 1)
+  co2 = mhz19.getMeasurement().co2_ppm;
+
+  DPRINT(F("CO2: "));
+  DPRINTLN(co2);
+  yield();
+#endif
+
   DPRINT(F("Temp: "));
   DPRINTLN(temperature);
 
@@ -247,4 +272,10 @@ void publishSensorsData()
   if (!client.publish(MQTT_PRESSURE_TOPIC, String(pressure).c_str(), true)) {
     DPRINTLNF("Sending pressure to MQTT failed");
   }
+
+#if (CO2_SENSOR == 1)
+  if (!client.publish(MQTT_CO2_TOPIC, String(co2).c_str(), true)) {
+    DPRINTLNF("Sending co2 to MQTT failed");
+  }  
+#endif
 }
